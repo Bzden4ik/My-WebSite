@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>ZenSpace - Ваш путь к гармонии</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1e1e2f;
+            --secondary-color: #ff6b6b;
+            --accent-color: #f8e9a1;
+            --background-color: #16213e;
+            --text-color: #ffffff;
+            --font-family: 'Montserrat', sans-serif;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: var(--font-family);
+            background-color: var(--background-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+            color: var(--text-color);
+        }
+        body::before, body::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1), transparent);
+            animation: rotate 20s infinite linear;
+            z-index: 0;
+        }
+        body::before {
+            width: 500px;
+            height: 500px;
+            top: -150px;
+            left: -150px;
+        }
+        body::after {
+            width: 700px;
+            height: 700px;
+            bottom: -250px;
+            right: -250px;
+        }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .app-container {
+            width: 360px;
+            background-color: var(--primary-color);
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        .screen {
+            display: none;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+        }
+        .screen.active {
+            display: block;
+        }
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        .content p {
+            font-size: 16px;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+        .button {
+            display: inline-block;
+            padding: 15px 30px;
+            background: var(--secondary-color);
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 30px;
+            transition: background 0.3s, transform 0.3s;
+        }
+        .button:hover {
+            background: #e63946;
+            transform: translateY(-5px);
+        }
+        .cards {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .card {
+            background-color: var(--accent-color);
+            padding: 20px;
+            border-radius: 15px;
+            color: #333;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+        }
+        .card:hover {
+            background-color: #ffe66d;
+            transform: translateY(-5px);
+        }
+        .card h2 {
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+        .card p {
+            font-size: 14px;
+            color: #555;
+        }
+        .back-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: transparent;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: color 0.3s;
+            padding: 10px;
+        }
+        .back-button:hover {
+            color: var(--secondary-color);
+        }
+        .back-button svg {
+            width: 24px;
+            height: 24px;
+        }
+        .meditation-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding-top: 60px;
+        }
+        .timer {
+            font-size: 48px;
+            margin-bottom: 30px;
+        }
+        .controls {
+            display: flex;
+            gap: 20px;
+        }
+        .control-button {
+            background: var(--secondary-color);
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            color: var(--text-color);
+            font-size: 24px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .control-button:hover {
+            background: #e63946;
+        }
+        .end-session {
+            margin-top: 30px;
+            color: var(--text-color);
+            text-decoration: underline;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .end-session:hover {
+            color: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="screen active" id="screen1">
+            <div class="header">
+                <h1>ZenSpace</h1>
+            </div>
+            <div class="content">
+                <p>Добро пожаловать в ZenSpace – ваше личное пространство для медитации и внутреннего покоя.</p>
+                <a href="#" class="button" id="startButton">Начать путешествие</a>
+            </div>
+        </div>
+        <div class="screen" id="screen2">
+            <button class="back-button" id="backButton">
+                <svg viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                </svg>
+            </button>
+            <div class="header">
+                <h1>Выберите сессию</h1>
+            </div>
+            <div class="content">
+                <div class="cards">
+                    <div class="card" id="session1">
+                        <h2>Утреннее пробуждение</h2>
+                        <p>Начните свой день с энергией и позитивом.</p>
+                    </div>
+                    <div class="card" id="session2">
+                        <h2>Снятие стресса</h2>
+                        <p>Отпустите напряжение и найдите внутренний баланс.</p>
+                    </div>
+                    <div class="card" id="session3">
+                        <h2>Мирный сон</h2>
+                        <p>Расслабьтесь и подготовьтесь к спокойной ночи.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="screen" id="screen3">
+            <button class="back-button" id="backButton2">
+                <svg viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                </svg>
+            </button>
+            <div class="header">
+                <h1 id="sessionTitle">Название сессии</h1>
+            </div>
+            <div class="content">
+                <p id="sessionDescription">Описание выбранной сессии.</p>
+                <a href="#" class="button" id="playButton">Начать сессию</a>
+            </div>
+        </div>
+        <div class="screen" id="screen4">
+            <button class="back-button" id="backButton3">
+                <svg viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                </svg>
+            </button>
+            <div class="meditation-screen">
+                <audio id="meditationAudio" style="display: none;"><source src="1.mp3" type="audio/mp3">Ваш браузер не поддерживает аудио.</audio>
+                <div class="timer" id="timer">05:00</div>
+                <div class="controls">
+                    <button class="control-button" id="playPauseButton">
+                        <svg viewBox="0 0 24 24">
+                            <path fill="currentColor" id="playPauseIcon" d="M8 5v14l11-7z"/>
+                        </svg>
+                    </button>
+                    <button class="control-button" id="stopButton">
+                        <svg viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M6 6h12v12H6z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="end-session" id="endSession">Завершить сессию</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const startButton = document.getElementById('startButton');
+        const backButton = document.getElementById('backButton');
+        const backButton2 = document.getElementById('backButton2');
+        const backButton3 = document.getElementById('backButton3');
+        const screen1 = document.getElementById('screen1');
+        const screen2 = document.getElementById('screen2');
+        const screen3 = document.getElementById('screen3');
+        const screen4 = document.getElementById('screen4');
+        const cards = document.querySelectorAll('.card');
+        const sessionTitle = document.getElementById('sessionTitle');
+        const sessionDescription = document.getElementById('sessionDescription');
+        const playButton = document.getElementById('playButton');
+        const timerElement = document.getElementById('timer');
+        const playPauseButton = document.getElementById('playPauseButton');
+        const stopButton = document.getElementById('stopButton');
+        const endSession = document.getElementById('endSession');
+        const playPauseIcon = document.getElementById('playPauseIcon');
+        const meditationAudio = document.getElementById('meditationAudio');
+
+        let timer;
+        let totalTime = 300;
+        let remainingTime = totalTime;
+        let isPlaying = false;
+
+        const sessions = {
+            session1: {
+                title: 'Утреннее пробуждение',
+                description: 'Начните свой день с энергией и позитивом. Эта медитация поможет вам настроиться на продуктивный день.',
+                duration: 300,
+                audio: '1.mp3'
+            },
+            session2: {
+                title: 'Снятие стресса',
+                description: 'Отпустите напряжение и найдите внутренний баланс. Идеально после напряженного дня.',
+                duration: 600,
+                audio: '2.mp3'
+            },
+            session3: {
+                title: 'Мирный сон',
+                description: 'Расслабьтесь и подготовьтесь к спокойной ночи. Эта сессия поможет вам уснуть быстрее и спать глубже.',
+                duration: 900,
+                audio: '3.mp3'
+            }
+        };
+
+        startButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            screen1.classList.remove('active');
+            screen2.classList.add('active');
+        });
+
+        backButton.addEventListener('click', () => {
+            screen2.classList.remove('active');
+            screen1.classList.add('active');
+        });
+
+        backButton2.addEventListener('click', () => {
+            screen3.classList.remove('active');
+            screen2.classList.add('active');
+        });
+
+        backButton3.addEventListener('click', () => {
+            screen4.classList.remove('active');
+            screen3.classList.add('active');
+            resetSession();
+        });
+
+        cards.forEach(card => {
+            card.addEventListener('click', () => {
+                const session = sessions[card.id];
+                sessionTitle.textContent = session.title;
+                sessionDescription.textContent = session.description;
+                totalTime = session.duration;
+                remainingTime = totalTime;
+                meditationAudio.setAttribute('src', session.audio);
+                updateTimerDisplay();
+                screen2.classList.remove('active');
+                screen3.classList.add('active');
+            });
+        });
+
+        playButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            screen3.classList.remove('active');
+            screen4.classList.add('active');
+            startSession();
+        });
+
+        playPauseButton.addEventListener('click', () => {
+            if (isPlaying) {
+                pauseSession();
+            } else {
+                resumeSession();
+            }
+        });
+
+        stopButton.addEventListener('click', () => {
+            resetSession();
+            screen4.classList.remove('active');
+            screen2.classList.add('active');
+        });
+
+        endSession.addEventListener('click', () => {
+            resetSession();
+            screen4.classList.remove('active');
+            screen2.classList.add('active');
+        });
+
+        function startSession() {
+            isPlaying = true;
+            playPauseIcon.setAttribute('d', 'M6 19h4V5H6v14zm8-14v14h4V5h-4z');
+            meditationAudio.play();
+            timer = setInterval(() => {
+                if (remainingTime > 0) {
+                    remainingTime--;
+                    updateTimerDisplay();
+                } else {
+                    resetSession();
+                    alert('Сессия завершена');
+                    screen4.classList.remove('active');
+                    screen2.classList.add('active');
+                }
+            }, 1000);
+        }
+
+        function pauseSession() {
+            isPlaying = false;
+            clearInterval(timer);
+            meditationAudio.pause();
+            playPauseIcon.setAttribute('d', 'M8 5v14l11-7z');
+        }
+
+        function resumeSession() {
+            isPlaying = true;
+            playPauseIcon.setAttribute('d', 'M6 19h4V5H6v14zm8-14v14h4V5h-4z');
+            meditationAudio.play();
+            timer = setInterval(() => {
+                if (remainingTime > 0) {
+                    remainingTime--;
+                    updateTimerDisplay();
+                } else {
+                    resetSession();
+                    alert('Сессия завершена');
+                    screen4.classList.remove('active');
+                    screen2.classList.add('active');
+                }
+            }, 1000);
+        }
+
+        function resetSession() {
+            isPlaying = false;
+            clearInterval(timer);
+            meditationAudio.pause();
+            meditationAudio.currentTime = 0;
+            remainingTime = totalTime;
+            updateTimerDisplay();
+            playPauseIcon.setAttribute('d', 'M8 5v14l11-7z');
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(remainingTime / 60).toString().padStart(2, '0');
+            const seconds = (remainingTime % 60).toString().padStart(2, '0');
+            timerElement.textContent = `${minutes}:${seconds}`;
+        }
+    </script>
+</body>
+</html>
